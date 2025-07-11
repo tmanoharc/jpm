@@ -1,0 +1,314 @@
+Header_____
+
+import React from 'react';
+import { Menu, User, ExternalLink } from 'lucide-react';
+import { useAppDispatch } from '../hooks/redux';
+import { toggleSidebar } from '../store/slices/navigationSlice';
+
+const Header: React.FC = () => {
+  const dispatch = useAppDispatch();
+
+  const handleMenuClick = () => {
+    dispatch(toggleSidebar());
+  };
+
+  return (
+    <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 sticky top-0 z-50">
+      <div className="flex items-center space-x-4">
+        <button
+          onClick={handleMenuClick}
+          className="p-2 hover:bg-gray-100 rounded-md transition-colors duration-200"
+          aria-label="Toggle sidebar"
+        >
+          <Menu className="h-5 w-5 text-gray-600" />
+        </button>
+        
+        <div className="flex items-center space-x-3">
+          <div className="text-sm font-medium text-gray-600">Company Logo</div>
+          <div className="h-6 w-px bg-gray-300"></div>
+          <h1 className="text-lg font-medium text-gray-900">TalentMatch360 - Cohort Hiring</h1>
+        </div>
+      </div>
+
+      <div className="flex items-center space-x-4">
+        <button className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+          <User className="h-4 w-4 mr-2" />
+          ID
+        </button>
+      </div>
+    </header>
+  );
+};
+
+export default Header;
+
+
+
+SIDEBAR_____________
+
+import React from 'react';
+import { Home, FileText, Users, BarChart3, HelpCircle } from 'lucide-react';
+import { useAppSelector, useAppDispatch } from '../hooks/redux';
+import { setActiveItem } from '../store/slices/navigationSlice';
+
+interface NavItem {
+  id: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+const navItems: NavItem[] = [
+  { id: 'home', label: 'Home', icon: Home },
+  { id: 'placement', label: 'Placement', icon: FileText },
+  { id: 'candidates', label: 'Candidates', icon: Users },
+  { id: 'requisition', label: 'Requisition', icon: BarChart3 },
+  { id: 'faqs', label: 'FAQs', icon: HelpCircle },
+];
+
+const Sidebar: React.FC = () => {
+  const { isCollapsed, activeItem } = useAppSelector((state) => state.navigation);
+  const dispatch = useAppDispatch();
+
+  const handleItemClick = (itemId: string) => {
+    dispatch(setActiveItem(itemId));
+  };
+
+  return (
+    <aside
+      className={`bg-white border-r border-gray-200 transition-all duration-300 ease-in-out ${
+        isCollapsed ? 'w-16' : 'w-64'
+      } flex-shrink-0`}
+    >
+      <nav className="mt-8 px-3">
+        <ul className="space-y-2">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeItem === item.id;
+            
+            return (
+              <li key={item.id}>
+                <button
+                  onClick={() => handleItemClick(item.id)}
+                  className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
+                    isActive
+                      ? 'bg-orange-50 text-orange-700 border-r-2 border-orange-500'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  }`}
+                  title={isCollapsed ? item.label : undefined}
+                >
+                  <Icon
+                    className={`flex-shrink-0 h-5 w-5 ${
+                      isActive ? 'text-orange-500' : 'text-gray-400'
+                    }`}
+                  />
+                  {!isCollapsed && (
+                    <span className="ml-3 truncate">{item.label}</span>
+                  )}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </aside>
+  );
+};
+
+export default Sidebar;
+
+
+DASHBOARD___________
+import React, { useState } from 'react';
+import { ExternalLink, FileText, Users, RefreshCw, CheckCircle, Clock, Phone, Calendar, Target } from 'lucide-react';
+
+interface StatCard {
+  title: string;
+  value: number;
+  icon: React.ComponentType<{ className?: string }>;
+  color: string;
+}
+
+const Dashboard: React.FC = () => {
+  const [filters, setFilters] = useState({
+    field1: 'Text',
+    country: 'India',
+    field2: 'Text',
+    field3: 'Text',
+    field4: 'Text',
+    field5: 'Text',
+    field6: 'Text',
+    field7: 'Text',
+    field8: 'Text',
+  });
+
+  const requisitionStats: StatCard[] = [
+    { title: 'In Progress', value: 100, icon: FileText, color: 'text-blue-600' },
+    { title: 'Intake Pending', value: 28, icon: RefreshCw, color: 'text-orange-600' },
+    { title: 'Ready to Match', value: 72, icon: CheckCircle, color: 'text-green-600' },
+    { title: 'Filled', value: 20, icon: Target, color: 'text-purple-600' },
+  ];
+
+  const candidateStats: StatCard[] = [
+    { title: 'In Progress', value: 100, icon: Users, color: 'text-blue-600' },
+    { title: 'Intake Pending', value: 20, icon: Clock, color: 'text-orange-600' },
+    { title: 'Offer Extension Pending', value: 14, icon: FileText, color: 'text-red-600' },
+    { title: 'Ready to Match', value: 56, icon: CheckCircle, color: 'text-green-600' },
+  ];
+
+  const additionalStats: StatCard[] = [
+    { title: 'Match Approval Pending', value: 40, icon: RefreshCw, color: 'text-yellow-600' },
+    { title: 'Calls to Schedule', value: 14, icon: Phone, color: 'text-indigo-600' },
+    { title: 'Future Talent', value: 12, icon: Calendar, color: 'text-teal-600' },
+    { title: 'Ready to Place', value: 20, icon: Target, color: 'text-emerald-600' },
+  ];
+
+  const handleFilterChange = (field: string, value: string) => {
+    setFilters(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleReset = () => {
+    setFilters({
+      field1: 'Text',
+      country: 'India',
+      field2: 'Text',
+      field3: 'Text',
+      field4: 'Text',
+      field5: 'Text',
+      field6: 'Text',
+      field7: 'Text',
+      field8: 'Text',
+    });
+  };
+
+  const StatCardComponent: React.FC<{ stat: StatCard }> = ({ stat }) => {
+    const Icon = stat.icon;
+    return (
+      <div className="bg-gray-50 rounded-lg p-4 flex items-center space-x-3">
+        <div className={`p-2 rounded-lg bg-white ${stat.color}`}>
+          <Icon className="h-5 w-5" />
+        </div>
+        <div>
+          <p className="text-sm font-medium text-gray-600">{stat.title}</p>
+          <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="flex-1 p-6 bg-gray-50 min-h-screen">
+      {/* Header Section */}
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">Welcome to Cohort Hiring</h1>
+        <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+          View Demand
+          <ExternalLink className="ml-2 h-4 w-4" />
+        </button>
+      </div>
+
+      {/* Filters Section */}
+      <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Field label</label>
+            <select
+              value={filters.field1}
+              onChange={(e) => handleFilterChange('field1', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option>Text</option>
+            </select>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Country</label>
+            <select
+              value={filters.country}
+              onChange={(e) => handleFilterChange('country', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option>India</option>
+              <option>USA</option>
+              <option>UK</option>
+            </select>
+          </div>
+
+          {[2, 3, 4].map((num) => (
+            <div key={num}>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Field label</label>
+              <select
+                value={filters[`field${num}` as keyof typeof filters]}
+                onChange={(e) => handleFilterChange(`field${num}`, e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option>Text</option>
+              </select>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          {[5, 6, 7, 8].map((num) => (
+            <div key={num}>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Field label</label>
+              <select
+                value={filters[`field${num}` as keyof typeof filters]}
+                onChange={(e) => handleFilterChange(`field${num}`, e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option>Text</option>
+              </select>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex justify-end space-x-3">
+          <button
+            onClick={handleReset}
+            className="px-6 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+          >
+            Reset
+          </button>
+          <button className="px-6 py-2 bg-gray-900 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200">
+            Show Result
+          </button>
+        </div>
+      </div>
+
+      {/* Statistics Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Requisition Details */}
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-6">Requisition Details</h2>
+          <div className="space-y-4">
+            {requisitionStats.map((stat, index) => (
+              <StatCardComponent key={index} stat={stat} />
+            ))}
+          </div>
+        </div>
+
+        {/* Candidate Details */}
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-6">Candidate Details</h2>
+          <div className="space-y-4">
+            {candidateStats.map((stat, index) => (
+              <StatCardComponent key={index} stat={stat} />
+            ))}
+          </div>
+        </div>
+
+        {/* Additional Stats */}
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-6">Additional Metrics</h2>
+          <div className="space-y-4">
+            {additionalStats.map((stat, index) => (
+              <StatCardComponent key={index} stat={stat} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
