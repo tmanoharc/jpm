@@ -312,3 +312,53 @@ const Dashboard: React.FC = () => {
 };
 
 export default Dashboard;
+
+placement-app/
+├── public/
+│   └── index.html
+├── src/
+│   ├── assets/
+│   │   └── images/, fonts/, styles/
+│   ├── app/
+│   │   └── store.ts             # RTK store config
+│   ├── features/
+│   │   ├── cadp/                # CADP-specific logic
+│   │   │   ├── components/
+│   │   │   ├── pages/
+│   │   │   ├── cadpSlice.ts     # RTK slice
+│   │   ├── hradp/
+│   │   │   ├── components/
+│   │   │   ├── pages/
+│   │   │   ├── hradpSlice.ts
+│   │   ├── cohort/
+│   │   │   ├── components/
+│   │   │   ├── pages/
+│   │   │   ├── cohortSlice.ts
+│   │   ├── ec/
+│   │   │   ├── [program-name]/  # Folder per EC sub-program
+│   │   │   │   ├── components/
+│   │   │   │   ├── pages/
+│   │   │   │   ├── programSlice.ts
+│   │   │   ├── shared/          # EC shared logic or base UI
+│   │   │   └── ecSlice.ts
+│   ├── components/
+│   │   └── common/              # Reusable UI components
+│   ├── layouts/
+│   │   └── MainLayout.tsx, AdminLayout.tsx
+│   ├── hooks/
+│   │   └── useCustomHook.ts
+│   ├── routes/
+│   │   └── RouteConfig.tsx      # App-wide routing setup
+│   ├── services/
+│   │   └── api.ts, placementService.ts
+│   ├── types/
+│   │   └── placement.d.ts
+│   ├── utils/
+│   │   └── formatDate.ts, validateForm.ts
+│   ├── styles/
+│   │   └── global.scss, theme.ts
+│   └── index.tsx
+│   └── App.tsx
+├── package.json
+├── tsconfig.json
+└── README.md
