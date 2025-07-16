@@ -335,12 +335,14 @@ placement-app/
 │   │   │   ├── pages/
 │   │   │   ├── cohortSlice.ts
 │   │   ├── ec/
-│   │   │   ├── [program-name]/  # Folder per EC sub-program
-│   │   │   │   ├── components/
-│   │   │   │   ├── pages/
-│   │   │   │   ├── programSlice.ts
-│   │   │   ├── shared/          # EC shared logic or base UI
-│   │   │   └── ecSlice.ts
+│   │   │   ├── components/           # Shared reusable components across EC programs
+│   │   |   ├── pages/                # Common screens for EC program flows
+│   │   |   ├── variants/             # Optional folder for UI differences per sub-program
+│   │   │   ├── programA/
+│   │   │   ├── programB/
+│   │   │   └── ...
+│   │   ├── ecSlice.ts            # Centralized RTK slice for EC logic
+│   │   └── ecUtils.ts            # Program-agnostic logic helper functions
 │   ├── components/
 │   │   └── common/              # Reusable UI components
 │   ├── layouts/
